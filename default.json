@@ -17,6 +17,17 @@
       "automerge": true
     },
     {
+      "description": "etcd's modules only work as a set. api/v3, client/v3, server/v3 and the pkg modules under go.etcd.io share generated gRPC interfaces, so raising one alone does not compile: with api/v3 at v3.7.1 and client/v3 left at v3.6.13, client/v3@v3.6.13/retry.go:102 fails with \"cannot use &retryKVClient{...} as etcdserverpb.KVClient\". Renovate opened one pull request per module and all of them failed, every architecture, for that reason. This groups them so they move together. It is deliberately not limited by matchUpdateTypes: a major bump needs the lockstep more than a minor one, and the general grouping rule above covers only minor, patch and digest.",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchPackageNames": [
+        "go.etcd.io/**"
+      ],
+      "groupName": "etcd",
+      "groupSlug": "etcd"
+    },
+    {
       "description": "Never auto-merge the Go toolchain, and never let it ride in somebody else's group. A rule that says automerge:false for one dependency is defeated by grouping, because Renovate decides automerge per BRANCH: go 1.27.0 rode into seven repositories inside a branch called renovate/github-actions, whose other dependency was actions/setup-go. Ungrouped, it gets a branch of its own and this setting governs it. It matters because go1.27.0 miscompiles on loong64 (golang/go#81000, bisected on real hardware to 3fdac6780b): go-gfx/gfx fails that lane and stayed open only because the lane failed, which is the CI gate holding rather than this rule. A repository without such a lane sees nothing.",
       "matchManagers": [
         "gomod",
